@@ -1,0 +1,36 @@
+spiral:
+  center: [320, 240]
+  inner_radius: 50
+  outer_radius: 200
+  turns: 2
+  color: [0, 255, 255]        # yellow (BGR for OpenCV)
+  thickness: 5
+
+game:
+  speed_multiplier: 16.0
+  end_circle_radius: 30
+
+trace:
+  color: [0, 0, 255]          # red trace
+  thickness: 3
+
+reference_dot:
+  color: [0, 255, 0]          # green
+  radius: 10
+
+display:
+  fps: 30
+  window_name: "Tremor Assessment Game"
+
+instructions:
+  - "Welcome to the Tremor Assessment Game!"
+  - ""
+  - "1. Position your hand in front of the camera."
+  - "2. Enter the yellow circle to start tracing the spiral."
+  - "3. Trace the spiral with your index finger."
+  - "4. Keep your finger at the correct depth (green)."
+  - "5. Complete the spiral to finish the test."
+  - ""
+  - "Press any key to begin..."
+
+
