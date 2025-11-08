@@ -23,7 +23,7 @@ class Renderer:
 
 
     def draw_reference_dot(self, frame, position):
-        cv2.circle(frame, position, 8, (0, 255, 0), -1)
+        cv2.circle(frame, position, 8, (255, 255, 0), -1)  # cyan circle
 
     def draw_entry_exit_circles(self, frame, spiral, show_end=False, show_start=True):
         if show_start:

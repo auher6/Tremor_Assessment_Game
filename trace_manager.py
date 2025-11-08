@@ -11,3 +11,6 @@ class TraceManager:
 
     def get_trace(self):
         return self.trace_points
+    
+    def clear_trace(self):
+        self.trace_points = []
