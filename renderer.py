@@ -55,4 +55,3 @@ class Renderer:
         cv2.putText(frame, text, (10, 30),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
 
-

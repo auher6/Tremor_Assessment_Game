@@ -23,14 +23,21 @@ display:
   window_name: "Tremor Assessment Game"
 
 instructions:
-  - "Welcome to the Tremor Assessment Game!"
-  - ""
-  - "1. Position your hand in front of the camera."
-  - "2. Enter the yellow circle to start tracing the spiral."
-  - "3. Trace the spiral with your index finger."
-  - "4. Keep your finger at the correct depth (green)."
-  - "5. Complete the spiral to finish the test."
-  - ""
-  - "Press any key to begin..."
-
-
+  - text: "Welcome to the Tremor Assessment Game!"
+    duration: 3
+  - text: ""
+    duration: 0
+  - text: "Move your finger and see its trace"
+    duration: 5
+  - text: "Observe the depth feedback"
+    duration: 5
+  - text: "Watch the reference dot move along the spiral"
+    duration: 5
+  - text: "Get ready to trace the spiral in 3 seconds!"
+    duration: 0
+  - text: "Start from the yellow circle and trace"
+    duration: 0
+  - text: "Get ready to trace the smaller spiral in 3 seconds!"
+    duration: 0
+  - text: "Great! Now trace the smaller spiral in reverse"
+    duration: 0

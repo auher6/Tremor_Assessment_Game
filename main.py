@@ -17,20 +17,8 @@ def main():
     camera = CameraManager()
     tracker = FingerTracker()
     spiral_cfg = config.get("spiral", {})
-    
-    # Get frame dimensions for proper centering
-    test_frame = camera.get_frame()
-    if test_frame is None:
-        print("⚠️ Cannot get frame dimensions. Using defaults.")
-        frame_width, frame_height = 640, 480
-    else:
-        frame_height, frame_width = test_frame.shape[:2]
-    
-    # Center coordinates based on actual frame dimensions
-    center_x, center_y = frame_width // 2, frame_height // 2
-    
     spiral_main = Spiral(
-        center=(center_x, center_y),  # Use actual center of screen
+        center=tuple(spiral_cfg.get("center", (320, 240))),
         inner_radius=spiral_cfg.get("inner_radius", 50),
         outer_radius=spiral_cfg.get("outer_radius", 200),
         turns=spiral_cfg.get("turns", 2),
@@ -39,7 +27,7 @@ def main():
 
     # Create second (smaller) spiral — tighter and smaller radius
     spiral_small = Spiral(
-        center=(center_x, center_y),  # Use same center
+        center=tuple(spiral_cfg.get("center", (320, 240))),  # offset to the right
         inner_radius=int(spiral_cfg.get("inner_radius", 50) * 0.6),
         outer_radius=int(spiral_cfg.get("outer_radius", 200) * 0.6),
         turns=spiral_cfg.get("turns", 2),
@@ -50,11 +38,16 @@ def main():
     renderer = Renderer()
     game_state = GameState()
 
+    game_cfg = config.get("game", {})
+    display_cfg = config.get("display", {})
+
     total_time = 0
     stage3_start_time = None
     stage5_start_time = None
-    fps = 30
-    speed_multiplier = 16.0
+    fps = display_cfg.get("fps", 30)
+
+    speed_multiplier = game_cfg.get("speed_multiplier", 16.0)
+    #speed_multiplier = 16.0
     start_circle_used = False
     small_start_circle_used = False
     end_circle_radius = 30
@@ -68,16 +61,16 @@ def main():
     steps = [
         ("Move your finger and see its trace", 5),
         ("Observe the depth feedback", 5),
-        ("Watch the reference dot move along the spiral", 5),
-        ("Get ready to trace the spiral in 3 seconds!", 0),  # Countdown before main spiral
-        ("Follow the blue dot with your finger", 0),         # main spiral tracing
-        ("Get ready to trace the smaller spiral in 3 seconds!", 0),  # Countdown before small spiral
-        ("Follow the blue dot with your finger", 0)          # second spiral phase (reverse)
+        ("Watch the reference dot move", 5),
+        ("Get ready to trace the spiral", 0),  # Countdown before main spiral
+        ("Start at the blue circle and trace", 0),       # main spiral tracing
+        ("Get ready to trace the spiral", 0),  # Countdown before small spiral
+        ("Follow the blue dot", 0)        # second spiral phase (reverse)
     ]
     current_step = 0
     step_start_time = time.time()
 
-    window_name = config.get("display", {}).get("window_name", "Tremor Assessment Game")
+    window_name = display_cfg.get("window_name", "Tremor Assessment")
     cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
     cv2.resizeWindow(window_name, 1280, 720)
 
@@ -113,16 +106,6 @@ def main():
                     text_y = 60  # Top area
                     cv2.putText(frame, countdown_text, (text_x, text_y),
                                 cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 255), 4)
-                    
-                    # Show tracing instructions during countdown
-                    if current_step == 3:
-                        instruction = "Follow the blue dot with your finger"
-                    else:  # current_step == 5
-                        instruction = "Follow the blue dot with your finger"
-                    
-                    instr_x = frame.shape[1] // 2 - len(instruction) * 6
-                    cv2.putText(frame, instruction, (instr_x, 40),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
                 else:
                     # Countdown finished, move to next step
                     countdown_active = False
@@ -139,9 +122,9 @@ def main():
                     trace_manager.clear_trace()
 
             # -----------------------
-            # Instructions text (blue, top-center) - show when not in countdown
+            # Instructions text (blue, top-center)
             # -----------------------
-            if not countdown_active:
+            if not countdown_active or current_step not in [3, 5]:
                 text_x = frame.shape[1] // 2 - len(step_text) * 6
                 cv2.putText(frame, step_text, (text_x, 40),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
