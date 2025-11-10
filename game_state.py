@@ -4,6 +4,7 @@ class GameState:
     WAITING = 0
     TRACING = 1
     FINISHED = 2
+    IDLE = 3
 
     def __init__(self):
         self.state = self.WAITING
